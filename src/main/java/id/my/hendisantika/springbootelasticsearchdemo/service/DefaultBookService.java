@@ -1,12 +1,14 @@
 package id.my.hendisantika.springbootelasticsearchdemo.service;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import id.my.hendisantika.springbootelasticsearchdemo.exception.BookNotFoundException;
 import id.my.hendisantika.springbootelasticsearchdemo.exception.DuplicateIsbnException;
 import id.my.hendisantika.springbootelasticsearchdemo.model.Book;
 import id.my.hendisantika.springbootelasticsearchdemo.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -73,5 +75,16 @@ public class DefaultBookService implements BookService {
     @Override
     public void deleteById(String id) {
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public Book update(String id, Book book) throws BookNotFoundException {
+        Book oldBook = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("There is not book associated with the given id"));
+        oldBook.setIsbn(book.getIsbn());
+        oldBook.setAuthorName(book.getAuthorName());
+        oldBook.setPublicationYear(book.getPublicationYear());
+        oldBook.setTitle(book.getTitle());
+        return bookRepository.save(oldBook);
     }
 }
