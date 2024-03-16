@@ -1,5 +1,6 @@
 package id.my.hendisantika.springbootelasticsearchdemo.controller;
 
+import id.my.hendisantika.springbootelasticsearchdemo.dto.BookDto;
 import id.my.hendisantika.springbootelasticsearchdemo.exception.BookNotFoundException;
 import id.my.hendisantika.springbootelasticsearchdemo.exception.DuplicateIsbnException;
 import id.my.hendisantika.springbootelasticsearchdemo.model.Book;
