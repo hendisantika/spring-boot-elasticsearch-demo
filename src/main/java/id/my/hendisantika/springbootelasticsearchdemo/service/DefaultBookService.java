@@ -1,14 +1,18 @@
 package id.my.hendisantika.springbootelasticsearchdemo.service;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import id.my.hendisantika.springbootelasticsearchdemo.model.Book;
 import id.my.hendisantika.springbootelasticsearchdemo.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders.match;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,5 +48,16 @@ public class DefaultBookService implements BookService {
     @Override
     public List<Book> findByAuthor(String authorName) {
         return bookRepository.findByAuthorName(authorName);
+    }
+
+    @Override
+    public List<Book> findByTitleAndAuthor(String title, String author) {
+        var criteria = QueryBuilders.bool(builder -> builder.must(
+                match(queryAuthor -> queryAuthor.field("authorName").query(author)),
+                match(queryTitle -> queryTitle.field("title").query(title))
+        ));
+
+        return elasticsearchTemplate.search(NativeQuery.builder().withQuery(criteria).build(), Book.class)
+                .stream().map(SearchHit::getContent).toList();
     }
 }
