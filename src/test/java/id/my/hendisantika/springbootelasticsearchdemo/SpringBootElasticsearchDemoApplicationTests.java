@@ -102,4 +102,13 @@ class SpringBootElasticsearchDemoApplicationTests {
         assertEquals(2018, createdBook.getPublicationYear());
         assertEquals("978-0345816023", createdBook.getIsbn());
     }
+
+    @Test
+    void testCreateBookWithDuplicateISBNThrowsException() throws DuplicateIsbnException {
+        Book createdBook = bookService.create(createBook("12 rules for life", "Jordan Peterson", 2018, "978-0345816023"));
+        assertNotNull(createdBook);
+        assertThrows(DuplicateIsbnException.class, () -> {
+            bookService.create(createBook("Test title", "Test author", 2010, "978-0345816023"));
+        });
+    }
 }
