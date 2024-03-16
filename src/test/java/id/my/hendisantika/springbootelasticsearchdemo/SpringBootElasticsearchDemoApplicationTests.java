@@ -4,6 +4,8 @@ import id.my.hendisantika.springbootelasticsearchdemo.exception.BookNotFoundExce
 import id.my.hendisantika.springbootelasticsearchdemo.exception.DuplicateIsbnException;
 import id.my.hendisantika.springbootelasticsearchdemo.model.Book;
 import id.my.hendisantika.springbootelasticsearchdemo.service.BookService;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,9 +21,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Testcontainers
 @ExtendWith(SpringExtension.class)
@@ -40,9 +40,14 @@ class SpringBootElasticsearchDemoApplicationTests {
         elasticsearchContainer.start();
     }
 
+    @AfterAll
+    static void destroy() {
+        elasticsearchContainer.stop();
+    }
+
     @BeforeEach
     void testIsContainerRunning() {
-        assertTrue(elasticsearchContainer.isRunning());
+        Assertions.assertTrue(elasticsearchContainer.isRunning());
         recreateIndex();
     }
 
@@ -50,13 +55,13 @@ class SpringBootElasticsearchDemoApplicationTests {
     void testGetBookByIsbn() throws DuplicateIsbnException {
         bookService.create(createBook("12 rules for life", "Jordan Peterson", 2018, "978-0345816023"));
         Optional<Book> result = bookService.getByIsbn("978-0345816023");
-        assertTrue(result.isPresent());
+        Assertions.assertTrue(result.isPresent());
         Book createdBook = result.get();
-        assertNotNull(createdBook);
-        assertEquals("12 rules for life", createdBook.getTitle());
-        assertEquals("Jordan Peterson", createdBook.getAuthorName());
-        assertEquals(2018, createdBook.getPublicationYear());
-        assertEquals("978-0345816023", createdBook.getIsbn());
+        Assertions.assertNotNull(createdBook);
+        Assertions.assertEquals("12 rules for life", createdBook.getTitle());
+        Assertions.assertEquals("Jordan Peterson", createdBook.getAuthorName());
+        Assertions.assertEquals(2018, createdBook.getPublicationYear());
+        Assertions.assertEquals("978-0345816023", createdBook.getIsbn());
     }
 
     @Test
@@ -65,8 +70,8 @@ class SpringBootElasticsearchDemoApplicationTests {
         bookService.create(createBook("The Cathedral and the Bazaar", "Eric Raymond", 1999, "9780596106386"));
         List<Book> books = bookService.getAll();
 
-        assertNotNull(books);
-        assertEquals(2, books.size());
+        Assertions.assertNotNull(books);
+        Assertions.assertEquals(2, books.size());
     }
 
     @Test
@@ -76,8 +81,8 @@ class SpringBootElasticsearchDemoApplicationTests {
 
         List<Book> books = bookService.findByAuthor("Jordan Peterson");
 
-        assertNotNull(books);
-        assertEquals(2, books.size());
+        Assertions.assertNotNull(books);
+        Assertions.assertEquals(2, books.size());
     }
 
     @Test
@@ -89,25 +94,25 @@ class SpringBootElasticsearchDemoApplicationTests {
 
         List<Book> books = bookService.findByTitleAndAuthor("rules", "jordan");
 
-        assertNotNull(books);
-        assertEquals(2, books.size());
+        Assertions.assertNotNull(books);
+        Assertions.assertEquals(2, books.size());
     }
 
     @Test
     void testCreateBook() throws DuplicateIsbnException {
         Book createdBook = bookService.create(createBook("12 rules for life", "Jordan Peterson", 2018, "978-0345816023"));
-        assertNotNull(createdBook);
-        assertNotNull(createdBook.getId());
-        assertEquals("12 rules for life", createdBook.getTitle());
-        assertEquals("Jordan Peterson", createdBook.getAuthorName());
-        assertEquals(2018, createdBook.getPublicationYear());
-        assertEquals("978-0345816023", createdBook.getIsbn());
+        Assertions.assertNotNull(createdBook);
+        Assertions.assertNotNull(createdBook.getId());
+        Assertions.assertEquals("12 rules for life", createdBook.getTitle());
+        Assertions.assertEquals("Jordan Peterson", createdBook.getAuthorName());
+        Assertions.assertEquals(2018, createdBook.getPublicationYear());
+        Assertions.assertEquals("978-0345816023", createdBook.getIsbn());
     }
 
     @Test
     void testCreateBookWithDuplicateISBNThrowsException() throws DuplicateIsbnException {
         Book createdBook = bookService.create(createBook("12 rules for life", "Jordan Peterson", 2018, "978-0345816023"));
-        assertNotNull(createdBook);
+        Assertions.assertNotNull(createdBook);
         assertThrows(DuplicateIsbnException.class, () -> {
             bookService.create(createBook("Test title", "Test author", 2010, "978-0345816023"));
         });
@@ -117,31 +122,13 @@ class SpringBootElasticsearchDemoApplicationTests {
     void testDeleteBookById() throws DuplicateIsbnException {
         Book createdBook = bookService.create(createBook("12 rules for life", "Jordan Peterson", 2018, "978-0345816023"));
 
-        assertNotNull(createdBook);
-        assertNotNull(createdBook.getId());
+        Assertions.assertNotNull(createdBook);
+        Assertions.assertNotNull(createdBook.getId());
 
         bookService.deleteById(createdBook.getId());
         List<Book> books = bookService.findByAuthor("Jordan Peterson");
 
-        assertTrue(books.isEmpty());
-    }
-
-    @Test
-    void testUpdateBook() throws DuplicateIsbnException, BookNotFoundException {
-        Book bookToUpdate = bookService.create(createBook("12 rules for life", "Jordan Peterson", 2000, "978-0345816023"));
-
-        assertNotNull(bookToUpdate);
-        assertNotNull(bookToUpdate.getId());
-
-        bookToUpdate.setPublicationYear(2018);
-        Book updatedBook = bookService.update(bookToUpdate.getId(), bookToUpdate);
-
-        assertNotNull(updatedBook);
-        assertNotNull(updatedBook.getId());
-        assertEquals("12 rules for life", updatedBook.getTitle());
-        assertEquals("Jordan Peterson", updatedBook.getAuthorName());
-        assertEquals(2018, updatedBook.getPublicationYear());
-        assertEquals("978-0345816023", updatedBook.getIsbn());
+        Assertions.assertTrue(books.isEmpty());
     }
 
     @Test
@@ -167,5 +154,23 @@ class SpringBootElasticsearchDemoApplicationTests {
             template.indexOps(Book.class).delete();
             template.indexOps(Book.class).create();
         }
+    }
+
+    @Test
+    void testUpdateBook() throws DuplicateIsbnException, BookNotFoundException {
+        Book bookToUpdate = bookService.create(createBook("12 rules for life", "Jordan Peterson", 2000, "978-0345816023"));
+
+        Assertions.assertNotNull(bookToUpdate);
+        Assertions.assertNotNull(bookToUpdate.getId());
+
+        bookToUpdate.setPublicationYear(2018);
+        Book updatedBook = bookService.update(bookToUpdate.getId(), bookToUpdate);
+
+        Assertions.assertNotNull(updatedBook);
+        Assertions.assertNotNull(updatedBook.getId());
+        Assertions.assertEquals("12 rules for life", updatedBook.getTitle());
+        Assertions.assertEquals("Jordan Peterson", updatedBook.getAuthorName());
+        Assertions.assertEquals(2018, updatedBook.getPublicationYear());
+        Assertions.assertEquals("978-0345816023", updatedBook.getIsbn());
     }
 }
