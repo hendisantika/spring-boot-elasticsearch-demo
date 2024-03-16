@@ -162,4 +162,10 @@ class SpringBootElasticsearchDemoApplicationTests {
         return book;
     }
 
+    private void recreateIndex() {
+        if (template.indexOps(Book.class).exists()) {
+            template.indexOps(Book.class).delete();
+            template.indexOps(Book.class).create();
+        }
+    }
 }
