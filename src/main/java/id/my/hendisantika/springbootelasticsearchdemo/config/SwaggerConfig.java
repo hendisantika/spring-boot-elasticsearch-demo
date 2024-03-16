@@ -41,23 +41,23 @@ public class SwaggerConfig {
     }
 
 
-    @Bean
-    public OpenAPI apiInfo() {
-        return new OpenAPI().info(new Info().title("Spring Data Elasticsearch example")
-                .description("Spring Data Elasticsearch example with Testcontainers")
-                .version("v0.0.2")
-                .contact(getContactDetails())
-                .license(getLicenseDetails()));
-    }
-
-    private Contact getContactDetails() {
-        return new Contact().name("Hendi Santika")
-                .email("hendisantika@yahoo.co.id")
-                .url("https://s.id/hendisantika");
-    }
-
-    private License getLicenseDetails() {
-        return new License().name("GNU General Public License v3.0")
-                .url("https://springdoc.org");
-    }
+//    @Bean
+//    public OpenAPI apiInfo() {
+//        return new OpenAPI().info(new Info().title("Spring Data Elasticsearch example")
+//                .description("Spring Data Elasticsearch example with Testcontainers")
+//                .version("v0.0.2")
+//                .contact(getContactDetails())
+//                .license(getLicenseDetails()));
+//    }
+//
+//    private Contact getContactDetails() {
+//        return new Contact().name("Hendi Santika")
+//                .email("hendisantika@yahoo.co.id")
+//                .url("https://s.id/hendisantika");
+//    }
+//
+//    private License getLicenseDetails() {
+//        return new License().name("GNU General Public License v3.0")
+//                .url("https://springdoc.org");
+//    }
 }
