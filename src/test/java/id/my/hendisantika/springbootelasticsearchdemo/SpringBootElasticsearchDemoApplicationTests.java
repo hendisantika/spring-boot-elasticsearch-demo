@@ -152,4 +152,14 @@ class SpringBootElasticsearchDemoApplicationTests {
             bookService.update("1A2B3C", updatedBook);
         });
     }
+
+    private Book createBook(String title, String authorName, int publicationYear, String isbn) {
+        Book book = new Book();
+        book.setTitle(title);
+        book.setAuthorName(authorName);
+        book.setPublicationYear(publicationYear);
+        book.setIsbn(isbn);
+        return book;
+    }
+
 }
