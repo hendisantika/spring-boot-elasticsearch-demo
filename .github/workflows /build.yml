@@ -1,6 +1,15 @@
 name: Java CI
-
-on: [ push ]
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - '.github/workflows/build.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - '.github/workflows/build.yml'
 
 jobs:
   build:
@@ -18,7 +27,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 17
+          java-version: 21
       - name: Run tests
         run: mvn clean verify
       - name: Build with Maven
