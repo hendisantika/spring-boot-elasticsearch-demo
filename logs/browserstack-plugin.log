@@ -8,3 +8,9 @@
 09:37:22.276 [ApplicationImpl pooled thread 335] INFO  c.b.l.BrowserStackRunExtension - junit
 09:37:22.276 [ApplicationImpl pooled thread 335] INFO  com.browserstack.utils.Helpers - null
 09:37:22.280 [ApplicationImpl pooled thread 335] INFO  c.b.l.BrowserStackRunExtension - Agent path: null
+09:50:32.970 [ApplicationImpl pooled thread 349] INFO  c.b.l.BrowserStackRunExtension - spring boot
+09:50:32.971 [ApplicationImpl pooled thread 349] INFO  com.browserstack.utils.Helpers - null
+09:50:55.899 [ApplicationImpl pooled thread 349] INFO  c.b.l.BrowserStackRunExtension - spring boot
+09:50:55.899 [ApplicationImpl pooled thread 349] INFO  com.browserstack.utils.Helpers - null
+09:52:40.971 [ApplicationImpl pooled thread 339] INFO  c.b.l.BrowserStackRunExtension - spring boot
+09:52:40.971 [ApplicationImpl pooled thread 339] INFO  com.browserstack.utils.Helpers - null
