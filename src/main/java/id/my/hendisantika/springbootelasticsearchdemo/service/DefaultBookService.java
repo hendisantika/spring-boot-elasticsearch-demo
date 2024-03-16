@@ -1,6 +1,7 @@
 package id.my.hendisantika.springbootelasticsearchdemo.service;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import id.my.hendisantika.springbootelasticsearchdemo.exception.DuplicateIsbnException;
 import id.my.hendisantika.springbootelasticsearchdemo.model.Book;
 import id.my.hendisantika.springbootelasticsearchdemo.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -59,5 +60,13 @@ public class DefaultBookService implements BookService {
 
         return elasticsearchTemplate.search(NativeQuery.builder().withQuery(criteria).build(), Book.class)
                 .stream().map(SearchHit::getContent).toList();
+    }
+
+    @Override
+    public Book create(Book book) throws DuplicateIsbnException {
+        if (getByIsbn(book.getIsbn()).isEmpty()) {
+            return bookRepository.save(book);
+        }
+        throw new DuplicateIsbnException(String.format("The provided ISBN: %s already exists. Use update instead!", book.getIsbn()));
     }
 }
