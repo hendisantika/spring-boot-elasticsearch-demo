@@ -1,9 +1,12 @@
 package id.my.hendisantika.springbootelasticsearchdemo.service;
 
+import id.my.hendisantika.springbootelasticsearchdemo.model.Book;
 import id.my.hendisantika.springbootelasticsearchdemo.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,4 +25,10 @@ public class DefaultBookService implements BookService {
     private final BookRepository bookRepository;
 
     private final ElasticsearchTemplate elasticsearchTemplate;
+
+    @Override
+    public Optional<Book> getByIsbn(String isbn) {
+        return bookRepository.findByIsbn(isbn);
+    }
+
 }
