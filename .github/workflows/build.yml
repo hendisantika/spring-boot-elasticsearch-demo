@@ -5,11 +5,13 @@ on:
     paths:
       - 'src/**'
       - '.github/workflows/build.yml'
+      - 'pom.xml'
   push:
     branches: [ main ]
     paths:
       - 'src/**'
       - '.github/workflows/build.yml'
+      - 'pom.xml'
 
 jobs:
   build:
